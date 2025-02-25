@@ -1,0 +1,12 @@
+# Flutter related files
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.idea/
+build/
+windows/
+linux/
+macos/
+android/
+ios/
+skill_swap.iml
