@@ -86,7 +86,7 @@ class SoftProvider extends ChangeNotifier {
 
   void incrementStep() {
     if (_currentStep < 3) {
-      _currentStep++;
+      _currentStep++
       notifyListeners();
     }
   }
