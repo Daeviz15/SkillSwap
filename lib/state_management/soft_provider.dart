@@ -127,8 +127,8 @@ class SoftProvider extends ChangeNotifier {
           .where((entry) => entry.value)
           .map((entry) => entry.key)
           .toList();
-      
-final unpickedSkill = _tappedStates.entries
+
+      final unpickedSkill = _tappedStates.entries
           .where((entry) => entry.value)
           .map((entry) => entry.key)
           .toList();
