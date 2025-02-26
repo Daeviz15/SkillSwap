@@ -8,10 +8,10 @@ import 'package:skill_swap/screens/navigation.dart';
 import 'package:skill_swap/screens/onboarding_screen.dart';
 import 'package:skill_swap/screens/profile_screen.dart';
 import 'package:skill_swap/screens/home_screen.dart';
-
 import 'package:skill_swap/screens/registration_screen.dart';
 import 'package:skill_swap/screens/see_all_screen.dart';
 import 'package:skill_swap/screens/user_category_screen.dart';
+import 'package:skill_swap/services/auth.dart';
 import 'package:skill_swap/state_management/authentication_provider.dart';
 import 'package:skill_swap/state_management/soft_provider.dart';
 import 'package:skill_swap/state_management/user_profile_provider.dart';
@@ -23,11 +23,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize Supabase
-  await Supabase.initialize(
-    url: 'https://lnovunahwnnngzvcuueq.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxub3Z1bmFod25ubmd6dmN1dWVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY4MTQyNDgsImV4cCI6MjA1MjM5MDI0OH0.puf3ZDbmlebivma7bcCV228OgRVz-TbP-dwGhm4kcMg',
-  );
+  // await Supabase.initialize(
+  //   url: 'https://lnovunahwnnngzvcuueq.supabase.co',
+  //   anonKey:
+  //       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imxub3Z1bmFod25ubmd6dmN1dWVxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzY4MTQyNDgsImV4cCI6MjA1MjM5MDI0OH0.puf3ZDbmlebivma7bcCV228OgRVz-TbP-dwGhm4kcMg',
+  // );
 
   // Initialize Firebase
   await Firebase.initializeApp(

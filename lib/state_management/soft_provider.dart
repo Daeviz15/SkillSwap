@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:skill_swap/services/database.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
 
 class SoftProvider extends ChangeNotifier {
@@ -92,88 +92,95 @@ class SoftProvider extends ChangeNotifier {
   }
 
   Future<void> proceed(BuildContext context) async {
-    String? fieldErrors = validateFields();
-    final id = uid.v4();
-    if (fieldErrors != null) {
-      _showSnackBar(fieldErrors, context);
-      return;
-    }
-
-    final user = FirebaseAuth.instance.currentUser;
-
-    if (user == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('User not authenticated')),
-      );
-      return;
-    }
-
-    final client = Supabase.instance.client;
-    final filename = '${id}_${imagePath!.path.split('/').last}';
-
-    // Read file in binary mode for upload
-    final bytes = await imagePath!.readAsBytes();
-    await client.storage.from('profile_images').uploadBinary(filename, bytes);
-
-    final url = client.storage.from('profile_images').getPublicUrl(filename);
-
-    try {
-      final learnSkill = _tappedStates.entries
-          .where((entry) => entry.value)
-          .map((entry) => entry.key)
-          .toList();
-
-      final shareSkill = _tappedStatesTwo.entries
-          .where((entry) => entry.value)
-          .map((entry) => entry.key)
-          .toList();
-
-      final unpickedSkill = _tappedStates.entries
-          .where((entry) => entry.value)
-          .map((entry) => entry.key)
-          .toList();
-
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (ctx) {
-          return const Center(
-            child: SpinKitFadingCircle(
-              color: Colors.blue,
-              size: 50.0,
-            ),
-          );
-        },
-      );
-      // Firebase operations
-      await Future.wait([
-        Database().learnSkill({'Learn_Skill': learnSkill}, user.uid),
-        Database().shareSkill({
-          'Share_Skill': shareSkill,
-          'uid': user.uid,
-          'First_Name': _firstName.text,
-          'Last_Name': _lastName.text,
-          'Description': _description.text,
-          'User_Image': url,
-        }, user.uid),
-        Database().addFirstTimeInfo(
-            {'isSetupComplete': true, 'User-Email': user.email}, user.uid),
-      ]);
-      Navigator.of(context).pop();
-      Get.offAllNamed('/navigate');
-    } on FirebaseException catch (e) {
-      debugPrint('Firebase error: ${e.message}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Firebase error: ${e.message}')),
-      );
-    } catch (e) {
-      debugPrint('General error: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('An error occurred. Please try again.')),
-      );
-    }
+  String? fieldErrors = validateFields();
+  final id = uid.v4();
+  
+  if (fieldErrors != null) {
+    _showSnackBar(fieldErrors, context);
+    return;
   }
 
+  final user = FirebaseAuth.instance.currentUser;
+
+  if (user == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('User not authenticated')),
+    );
+    return;
+  }
+
+  // Firebase Storage reference
+  final  storageRef = FirebaseStorage.instance
+      .ref()
+      .child('profile_images')
+      .child('${id}_${imagePath!.path.split('/').last}');
+
+  String imageUrl = '';
+
+  try {
+    // Show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return const Center(
+          child: SpinKitFadingCircle(
+            color: Colors.blue,
+            size: 50.0,
+          ),
+        );
+      },
+    );
+
+    // Upload image to Firebase Storage
+    await storageRef.putFile(imagePath!);
+
+    // Get the download URL of uploaded image
+    imageUrl = await storageRef.getDownloadURL();
+
+    // Process skills
+    final learnSkill = _tappedStates.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+
+    final shareSkill = _tappedStatesTwo.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+
+    // Firebase Database operations
+    await Future.wait([
+      Database().learnSkill({'Learn_Skill': learnSkill}, user.uid),
+      Database().shareSkill({
+        'Share_Skill': shareSkill,
+        'uid': user.uid,
+        'First_Name': _firstName.text,
+        'Last_Name': _lastName.text,
+        'Description': _description.text,
+        'User_Image': imageUrl, // Firebase image URL
+      }, user.uid),
+      Database().addFirstTimeInfo(
+        {'isSetupComplete': true, 'User-Email': user.email},
+        user.uid,
+      ),
+    ]);
+
+    // Close loading dialog
+    Navigator.of(context).pop();
+    Get.offAllNamed('/navigate');
+  } on FirebaseException catch (e) {
+    debugPrint('Firebase error: ${e.message}');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Firebase error: ${e.message}')),
+    );
+  } catch (e) {
+    debugPrint('General error: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('An error occurred. Please try again.')),
+    );
+  }
+}
   void _showSnackBar(String message, BuildContext context, {Color? color}) {
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(

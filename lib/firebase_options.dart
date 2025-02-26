@@ -20,28 +20,28 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: "AIzaSyBibVis-rwSune37ls-IXXax164PCnTdSQ",
-    authDomain: "skillswap-105ac.firebaseapp.com",
-    projectId: "skillswap-105ac",
-    storageBucket: "skillswap-105ac.firebasestorage.app",
-    messagingSenderId: "501776748965",
-    appId: "1:501776748965:web:ffa1726c77a018a304584c",
+    apiKey: "AIzaSyDH8Mv6rl_FdI8ct-ERYMVE_OsLK3usDAY",
+    authDomain: "chatify-ecd67.firebaseapp.com",
+    projectId: "chatify-ecd67",
+    storageBucket: "chatify-ecd67.appspot.com",
+    messagingSenderId: "931156631355",
+    appId: "1:931156631355:web:your_web_app_id_here",
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    appId: '1:501776748965:android:4959bfff4a3d0b9a04584c',
-    apiKey: 'AIzaSyCXJnp97VftwAO615s2sX7MhkYF5yzFZbA',
-    projectId: 'skillswap-105ac',
-    messagingSenderId: '501776748965',
-    storageBucket: 'skillswap-105ac.firebasestorage.app',
+    appId: '1:931156631355:android:8a0feb25f7deebacbda11e',
+    apiKey: 'AIzaSyDH8Mv6rl_FdI8ct-ERYMVE_OsLK3usDAY',
+    projectId: 'chatify-ecd67',
+    messagingSenderId: '931156631355',
+    storageBucket: 'chatify-ecd67.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    appId: '1:501776748965:ios:427762af92b4bb7204584c',
-    apiKey: 'AIzaSyBgJnZJZet-x4C48lIBbmkylO_WTmgn-k4',
-    projectId: 'skillswap-105ac',
-    messagingSenderId: '501776748965',
-    storageBucket: 'skillswap-105ac.firebasestorage.app',
-    iosClientId: '501776748965-8sgir9gjeupp30m9euuj17juhlt5d943.apps.googleusercontent.com',
+    appId: '1:931156631355:ios:your_ios_app_id_here',
+    apiKey: 'AIzaSyDH8Mv6rl_FdI8ct-ERYMVE_OsLK3usDAY',
+    projectId: 'chatify-ecd67',
+    messagingSenderId: '931156631355',
+    storageBucket: 'chatify-ecd67.appspot.com',
+    iosClientId: 'your_ios_client_id_here',
   );
 }

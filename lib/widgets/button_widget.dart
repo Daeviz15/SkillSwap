@@ -20,7 +20,7 @@ class ButtonWidget extends StatelessWidget {
           textAlign: TextAlign.center,
           style: GoogleFonts.poppins(
             textStyle: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
           ),
         ),
       ),
